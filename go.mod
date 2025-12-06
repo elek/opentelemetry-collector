@@ -6,8 +6,9 @@ go 1.25.3
 
 require (
 	github.com/elek/otel-bigquery-exporter v0.0.0-20251205143500-b4c4d427c175
-	github.com/elek/otel-node-exporter v0.0.0-20251204202718-a746382ec893
-	github.com/elek/otel-smartctl-receiver v0.0.0-20251205143342-ffd4588a2cd3
+	github.com/elek/otel-node-exporter v0.0.0-20251206084810-57e694070d74
+	github.com/elek/otel-nvme-receiver v0.0.0-20251206110641-d298ba316401
+	github.com/elek/otel-smartctl-receiver v0.0.0-20251206084658-33e7e38431a3
 	github.com/open-telemetry/opentelemetry-collector-contrib/confmap/provider/aesprovider v0.141.0
 	github.com/open-telemetry/opentelemetry-collector-contrib/confmap/provider/googlesecretmanagerprovider v0.141.0
 	github.com/open-telemetry/opentelemetry-collector-contrib/confmap/provider/s3provider v0.141.0

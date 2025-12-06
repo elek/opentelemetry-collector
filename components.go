@@ -109,6 +109,7 @@ import (
 	unrollprocessor "github.com/open-telemetry/opentelemetry-collector-contrib/processor/unrollprocessor"
 	nodeexporterreceiver "github.com/elek/otel-node-exporter"
 	smartctlreceiver "github.com/elek/otel-smartctl-receiver"
+	nvmereceiver "github.com/elek/otel-nvme-receiver"
 	nopreceiver "go.opentelemetry.io/collector/receiver/nopreceiver"
 	otlpreceiver "go.opentelemetry.io/collector/receiver/otlpreceiver"
 	apachereceiver "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/apachereceiver"
@@ -257,6 +258,7 @@ func components() (otelcol.Factories, error) {
 	factories.Receivers, err = otelcol.MakeFactoryMap[receiver.Factory](
 		nodeexporterreceiver.NewFactory(),
 		smartctlreceiver.NewFactory(),
+		nvmereceiver.NewFactory(),
 		nopreceiver.NewFactory(),
 		otlpreceiver.NewFactory(),
 		apachereceiver.NewFactory(),
@@ -318,6 +320,7 @@ func components() (otelcol.Factories, error) {
 	factories.ReceiverModules = make(map[component.Type]string, len(factories.Receivers))
 	factories.ReceiverModules[nodeexporterreceiver.NewFactory().Type()] = "github.com/elek/otel-node-exporter main"
 	factories.ReceiverModules[smartctlreceiver.NewFactory().Type()] = "github.com/elek/otel-smartctl-receiver main"
+	factories.ReceiverModules[nvmereceiver.NewFactory().Type()] = "github.com/elek/otel-nvme-receiver main"
 	factories.ReceiverModules[nopreceiver.NewFactory().Type()] = "go.opentelemetry.io/collector/receiver/nopreceiver v0.141.0"
 	factories.ReceiverModules[otlpreceiver.NewFactory().Type()] = "go.opentelemetry.io/collector/receiver/otlpreceiver v0.141.0"
 	factories.ReceiverModules[apachereceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/apachereceiver v0.141.0"
