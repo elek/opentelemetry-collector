@@ -1,3 +1,4 @@
+collector-config.yaml
 dist
 otelcol
 opentelemetry-collector

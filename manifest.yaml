@@ -97,11 +97,11 @@ processors:
   - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/unrollprocessor v0.141.0
 
 receivers:
-  - gomod: github.com/elek/otel-node-exporter main
+  - gomod: github.com/elek/otel-node-exporter 074a6a79
     name: nodeexporterreceiver
-  - gomod: github.com/elek/otel-smartctl-receiver main
+  - gomod: github.com/elek/otel-smartctl-receiver 0368a10
     name: smartctlreceiver
-  - gomod: github.com/elek/otel-nvme-receiver main
+  - gomod: github.com/elek/otel-nvme-receiver 88cb305
     name: nvmereceiver
   - gomod: go.opentelemetry.io/collector/receiver/nopreceiver v0.141.0
   - gomod: go.opentelemetry.io/collector/receiver/otlpreceiver v0.141.0

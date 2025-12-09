@@ -318,9 +318,9 @@ func components() (otelcol.Factories, error) {
 		return otelcol.Factories{}, err
 	}
 	factories.ReceiverModules = make(map[component.Type]string, len(factories.Receivers))
-	factories.ReceiverModules[nodeexporterreceiver.NewFactory().Type()] = "github.com/elek/otel-node-exporter main"
-	factories.ReceiverModules[smartctlreceiver.NewFactory().Type()] = "github.com/elek/otel-smartctl-receiver main"
-	factories.ReceiverModules[nvmereceiver.NewFactory().Type()] = "github.com/elek/otel-nvme-receiver main"
+	factories.ReceiverModules[nodeexporterreceiver.NewFactory().Type()] = "github.com/elek/otel-node-exporter 074a6a79"
+	factories.ReceiverModules[smartctlreceiver.NewFactory().Type()] = "github.com/elek/otel-smartctl-receiver 0368a10"
+	factories.ReceiverModules[nvmereceiver.NewFactory().Type()] = "github.com/elek/otel-nvme-receiver 88cb305"
 	factories.ReceiverModules[nopreceiver.NewFactory().Type()] = "go.opentelemetry.io/collector/receiver/nopreceiver v0.141.0"
 	factories.ReceiverModules[otlpreceiver.NewFactory().Type()] = "go.opentelemetry.io/collector/receiver/otlpreceiver v0.141.0"
 	factories.ReceiverModules[apachereceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/apachereceiver v0.141.0"
