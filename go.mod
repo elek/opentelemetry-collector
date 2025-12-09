@@ -825,3 +825,4 @@ require (
 )
 
 replace github.com/openshift/api => github.com/openshift/api v0.0.0-20230726162818-81f778f3b3ec
+exclude github.com/knadh/koanf v1.5.0
