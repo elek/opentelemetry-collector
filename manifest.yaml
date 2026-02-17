@@ -2,7 +2,7 @@ dist:
   module: github.com/elek/opentelemetry-collector
   name: otelcol
   description: OpenTelemetry Collector. Custom distribution
-  version: 1.0.0
+  version: 1.2.1
   output_path: "."
   build_tags: "grpcnotrace"
 
