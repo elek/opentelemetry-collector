@@ -105,6 +105,8 @@ receivers:
     name: smartctlreceiver
   - gomod: github.com/elek/otel-nvme-receiver 88cb305
     name: nvmereceiver
+  - gomod: go.opentelemetry.io/ebpf-profiler v0.0.202610
+    import: go.opentelemetry.io/ebpf-profiler/collector
   - gomod: go.opentelemetry.io/collector/receiver/nopreceiver v0.145.0
   - gomod: go.opentelemetry.io/collector/receiver/otlpreceiver v0.145.0
   - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/receiver/apachereceiver v0.145.0
