@@ -112,6 +112,7 @@ import (
 	smartctlreceiver "github.com/elek/otel-smartctl-receiver"
 	nvmereceiver "github.com/elek/otel-nvme-receiver"
 	collector "go.opentelemetry.io/ebpf-profiler/collector"
+	nftreceiver "github.com/elek/otel-nft-receiver"
 	nopreceiver "go.opentelemetry.io/collector/receiver/nopreceiver"
 	otlpreceiver "go.opentelemetry.io/collector/receiver/otlpreceiver"
 	apachereceiver "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/apachereceiver"
@@ -262,6 +263,7 @@ func components() (otelcol.Factories, error) {
 		smartctlreceiver.NewFactory(),
 		nvmereceiver.NewFactory(),
 		collector.NewFactory(),
+		nftreceiver.NewFactory(),
 		nopreceiver.NewFactory(),
 		otlpreceiver.NewFactory(),
 		apachereceiver.NewFactory(),
@@ -325,6 +327,7 @@ func components() (otelcol.Factories, error) {
 	factories.ReceiverModules[smartctlreceiver.NewFactory().Type()] = "github.com/elek/otel-smartctl-receiver 0368a10"
 	factories.ReceiverModules[nvmereceiver.NewFactory().Type()] = "github.com/elek/otel-nvme-receiver 88cb305"
 	factories.ReceiverModules[collector.NewFactory().Type()] = "go.opentelemetry.io/ebpf-profiler v0.0.202610"
+	factories.ReceiverModules[nftreceiver.NewFactory().Type()] = "github.com/elek/otel-nft-receiver 43ccc69"
 	factories.ReceiverModules[nopreceiver.NewFactory().Type()] = "go.opentelemetry.io/collector/receiver/nopreceiver v0.147.0"
 	factories.ReceiverModules[otlpreceiver.NewFactory().Type()] = "go.opentelemetry.io/collector/receiver/otlpreceiver v0.147.0"
 	factories.ReceiverModules[apachereceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/apachereceiver v0.147.0"

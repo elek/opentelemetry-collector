@@ -1208,6 +1208,8 @@ github.com/elek/otel-attrcol-processor v0.0.0-20260109151916-f945a59f840e h1:F0Y
 github.com/elek/otel-attrcol-processor v0.0.0-20260109151916-f945a59f840e/go.mod h1:lpE26w5bhGho8/+zrw3VZR8Iqm2/z9KQrSSwQ2r6llA=
 github.com/elek/otel-bigquery-exporter v0.0.0-20251206073421-07b366c7b7f8 h1:osqTHWywQSXeVx5k0cuhFG2Ql5ZxnGb9nSBX1/kf9OE=
 github.com/elek/otel-bigquery-exporter v0.0.0-20251206073421-07b366c7b7f8/go.mod h1:VCcfgY2RiTQaFF3RuO876qMitZ5FcbR5CzexukxwOf8=
+github.com/elek/otel-nft-receiver v0.0.0-20260413095132-43ccc69f24f5 h1:ZN8O1J5zgLCsXMneUkQfW8pgTKR7aFP6ccSIaAsJt6E=
+github.com/elek/otel-nft-receiver v0.0.0-20260413095132-43ccc69f24f5/go.mod h1:jNrXyO+UNcTGZBpBGtorSjvN9t4ECSpkCmeBaz9+7yU=
 github.com/elek/otel-node-exporter v0.0.0-20251209143428-074a6a79c3fa h1:DBRbxl2DWiW4HKXdp/SvrJKvwV20apYD01OPKJc2LLc=
 github.com/elek/otel-node-exporter v0.0.0-20251209143428-074a6a79c3fa/go.mod h1:9LSiv2lNJfNvLeot7Z0Ha0qEBwFNPgf22c/r1XGm8BI=
 github.com/elek/otel-nvme-receiver v0.0.0-20251209132949-88cb305812d3 h1:LW5Hhq2he6PMVd3pk3gYbnsjpgto7ydPDvx1N4VrBIc=
@@ -1482,6 +1484,8 @@ github.com/google/martian/v3 v3.2.1/go.mod h1:oBOf6HBosgwRXnUGWUB05QECsc6uvmMiJ3
 github.com/google/martian/v3 v3.3.2/go.mod h1:oBOf6HBosgwRXnUGWUB05QECsc6uvmMiJ3+6W4l/CUk=
 github.com/google/martian/v3 v3.3.3 h1:DIhPTQrbPkgs2yJYdXU/eNACCG5DVQjySNRNlflZ9Fc=
 github.com/google/martian/v3 v3.3.3/go.mod h1:iEPrYcgCF7jA9OtScMFQyAlZZ4YXTKEtJ1E6RWzmBA0=
+github.com/google/nftables v0.3.0 h1:bkyZ0cbpVeMHXOrtlFc8ISmfVqq5gPJukoYieyVmITg=
+github.com/google/nftables v0.3.0/go.mod h1:BCp9FsrbF1Fn/Yu6CLUc9GGZFw/+hsxfluNXXmxBfRM=
 github.com/google/pprof v0.0.0-20181206194817-3ea8567a2e57/go.mod h1:zfwlbNMJ+OItoe0UupaVj+oy1omPYYDuagoSzA8v9mc=
 github.com/google/pprof v0.0.0-20190515194954-54271f7e092f/go.mod h1:zfwlbNMJ+OItoe0UupaVj+oy1omPYYDuagoSzA8v9mc=
 github.com/google/pprof v0.0.0-20191218002539-d4f498aebedc/go.mod h1:ZgVRPoUq/hfqzAqh7sHMqb3I9Rq5C59dIz2SbBwJ4eM=
@@ -2534,6 +2538,8 @@ github.com/vektah/gqlparser/v2 v2.5.22 h1:yaaeJ0fu+nv1vUMW0Hl+aS1eiv1vMfapBNjpff
 github.com/vektah/gqlparser/v2 v2.5.22/go.mod h1:xMl+ta8a5M1Yo1A1Iwt/k7gSpscwSnHZdw7tfhEGfTM=
 github.com/vincent-petithory/dataurl v1.0.0 h1:cXw+kPto8NLuJtlMsI152irrVw9fRDX8AbShPRpg2CI=
 github.com/vincent-petithory/dataurl v1.0.0/go.mod h1:FHafX5vmDzyP+1CQATJn7WFKc9CvnvxyvZy6I1MrG/U=
+github.com/vishvananda/netns v0.0.4 h1:Oeaw1EM2JMxD51g9uhtC0D7erkIjgmj8+JZc26m1YX8=
+github.com/vishvananda/netns v0.0.4/go.mod h1:SpkAiCQRtJ6TvvxPnOSyH3BMl6unz3xZlaprSwhNNJM=
 github.com/vmihailenco/msgpack/v4 v4.3.13 h1:A2wsiTbvp63ilDaWmsk2wjx6xZdxQOvpiNlKBGKKXKI=
 github.com/vmihailenco/msgpack/v4 v4.3.13/go.mod h1:gborTTJjAo/GWTqqRjrLCn9pgNN+NXzzngzBKDPIqw4=
 github.com/vmihailenco/tagparser v0.1.2 h1:gnjoVuB/kljJ5wICEEOpx98oXMWPLj22G67Vbd1qPqc=

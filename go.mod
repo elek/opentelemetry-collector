@@ -2,11 +2,12 @@
 
 module github.com/elek/opentelemetry-collector
 
-go 1.25.3
+go 1.26.1
 
 require (
 	github.com/elek/otel-attrcol-processor v0.0.0-20260109151916-f945a59f840e
 	github.com/elek/otel-bigquery-exporter v0.0.0-20251206073421-07b366c7b7f8
+	github.com/elek/otel-nft-receiver v0.0.0-20260413095132-43ccc69f24f5
 	github.com/elek/otel-node-exporter v0.0.0-20251209143428-074a6a79c3fa
 	github.com/elek/otel-nvme-receiver v0.0.0-20251209132949-88cb305812d3
 	github.com/elek/otel-smartctl-receiver v0.0.0-20251209143324-0368a10167a5
@@ -457,6 +458,7 @@ require (
 	github.com/google/go-github/v83 v83.0.0 // indirect
 	github.com/google/go-querystring v1.2.0 // indirect
 	github.com/google/go-tpm v0.9.8 // indirect
+	github.com/google/nftables v0.3.0 // indirect
 	github.com/google/s2a-go v0.1.9 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.3.11 // indirect
