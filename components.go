@@ -325,7 +325,7 @@ func components() (otelcol.Factories, error) {
 	factories.ReceiverModules = make(map[component.Type]string, len(factories.Receivers))
 	factories.ReceiverModules[nodeexporterreceiver.NewFactory().Type()] = "github.com/elek/otel-node-exporter 074a6a79"
 	factories.ReceiverModules[smartctlreceiver.NewFactory().Type()] = "github.com/elek/otel-smartctl-receiver 0368a10"
-	factories.ReceiverModules[nvmereceiver.NewFactory().Type()] = "github.com/elek/otel-nvme-receiver 88cb305"
+	factories.ReceiverModules[nvmereceiver.NewFactory().Type()] = "github.com/elek/otel-nvme-receiver 8cc0a85"
 	factories.ReceiverModules[collector.NewFactory().Type()] = "go.opentelemetry.io/ebpf-profiler v0.0.202610"
 	factories.ReceiverModules[nftreceiver.NewFactory().Type()] = "github.com/elek/otel-nft-receiver 43ccc69"
 	factories.ReceiverModules[nopreceiver.NewFactory().Type()] = "go.opentelemetry.io/collector/receiver/nopreceiver v0.147.0"

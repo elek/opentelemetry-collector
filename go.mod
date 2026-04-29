@@ -9,7 +9,7 @@ require (
 	github.com/elek/otel-bigquery-exporter v0.0.0-20251206073421-07b366c7b7f8
 	github.com/elek/otel-nft-receiver v0.0.0-20260413095132-43ccc69f24f5
 	github.com/elek/otel-node-exporter v0.0.0-20251209143428-074a6a79c3fa
-	github.com/elek/otel-nvme-receiver v0.0.0-20251209132949-88cb305812d3
+	github.com/elek/otel-nvme-receiver v0.0.0-20260429182428-8cc0a8577c1f
 	github.com/elek/otel-smartctl-receiver v0.0.0-20251209143324-0368a10167a5
 	github.com/open-telemetry/opentelemetry-collector-contrib/confmap/provider/aesprovider v0.147.0
 	github.com/open-telemetry/opentelemetry-collector-contrib/confmap/provider/googlesecretmanagerprovider v0.147.0

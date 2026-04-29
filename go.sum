@@ -1212,8 +1212,8 @@ github.com/elek/otel-nft-receiver v0.0.0-20260413095132-43ccc69f24f5 h1:ZN8O1J5z
 github.com/elek/otel-nft-receiver v0.0.0-20260413095132-43ccc69f24f5/go.mod h1:jNrXyO+UNcTGZBpBGtorSjvN9t4ECSpkCmeBaz9+7yU=
 github.com/elek/otel-node-exporter v0.0.0-20251209143428-074a6a79c3fa h1:DBRbxl2DWiW4HKXdp/SvrJKvwV20apYD01OPKJc2LLc=
 github.com/elek/otel-node-exporter v0.0.0-20251209143428-074a6a79c3fa/go.mod h1:9LSiv2lNJfNvLeot7Z0Ha0qEBwFNPgf22c/r1XGm8BI=
-github.com/elek/otel-nvme-receiver v0.0.0-20251209132949-88cb305812d3 h1:LW5Hhq2he6PMVd3pk3gYbnsjpgto7ydPDvx1N4VrBIc=
-github.com/elek/otel-nvme-receiver v0.0.0-20251209132949-88cb305812d3/go.mod h1:oAQW5NIzvdvnl38w06dW8WmNW1J9Plyvyf+FVqunsvI=
+github.com/elek/otel-nvme-receiver v0.0.0-20260429182428-8cc0a8577c1f h1:Aqgs2G1D2XtC+GJlplD657zuGOxAaZF0d5lCfE5+sAU=
+github.com/elek/otel-nvme-receiver v0.0.0-20260429182428-8cc0a8577c1f/go.mod h1:oAQW5NIzvdvnl38w06dW8WmNW1J9Plyvyf+FVqunsvI=
 github.com/elek/otel-smartctl-receiver v0.0.0-20251209143324-0368a10167a5 h1:Y4xRDtKEaeqUEiwfkuxKpT3I5e0DetCmx0R1/8geYjw=
 github.com/elek/otel-smartctl-receiver v0.0.0-20251209143324-0368a10167a5/go.mod h1:hl6W88ufgZ5tUsoVuvLrRD/VONSj02AoIkxgKf3UqkU=
 github.com/ema/qdisc v1.0.0 h1:EHLG08FVRbWLg8uRICa3xzC9Zm0m7HyMHfXobWFnXYg=
