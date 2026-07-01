@@ -10,7 +10,7 @@ import (
 	"go.opentelemetry.io/collector/otelcol"
 	"go.opentelemetry.io/collector/processor"
 	"go.opentelemetry.io/collector/receiver"
-	"go.opentelemetry.io/collector/service/telemetry/otelconftelemetry"
+	otelconftelemetry "go.opentelemetry.io/collector/service/telemetry/otelconftelemetry"
 	forwardconnector "go.opentelemetry.io/collector/connector/forwardconnector"
 	countconnector "github.com/open-telemetry/opentelemetry-collector-contrib/connector/countconnector"
 	datadogconnector "github.com/open-telemetry/opentelemetry-collector-contrib/connector/datadogconnector"
@@ -29,6 +29,7 @@ import (
 	nopexporter "go.opentelemetry.io/collector/exporter/nopexporter"
 	otlpexporter "go.opentelemetry.io/collector/exporter/otlpexporter"
 	otlphttpexporter "go.opentelemetry.io/collector/exporter/otlphttpexporter"
+	clickhouseexporter "github.com/open-telemetry/opentelemetry-collector-contrib/exporter/clickhouseexporter"
 	elasticsearchexporter "github.com/open-telemetry/opentelemetry-collector-contrib/exporter/elasticsearchexporter"
 	fileexporter "github.com/open-telemetry/opentelemetry-collector-contrib/exporter/fileexporter"
 	googlecloudexporter "github.com/open-telemetry/opentelemetry-collector-contrib/exporter/googlecloudexporter"
@@ -169,6 +170,20 @@ import (
 	zipkinreceiver "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/zipkinreceiver"
 )
 
+type aliasProvider interface{ DeprecatedAlias() component.Type }
+
+func makeModulesMap[T component.Factory](factories map[component.Type]T, modules map[component.Type]string) map[component.Type]string {
+	for compType, factory := range factories {
+		if ap, ok := any(factory).(aliasProvider); ok {
+			alias := ap.DeprecatedAlias()
+			if alias.String() != "" {
+				modules[alias] = modules[compType]
+			}
+		}
+	}
+	return modules
+}
+
 func components() (otelcol.Factories, error) {
 	var err error
 	factories := otelcol.Factories{
@@ -218,45 +233,46 @@ func components() (otelcol.Factories, error) {
 	if err != nil {
 		return otelcol.Factories{}, err
 	}
-	factories.ExtensionModules = make(map[component.Type]string, len(factories.Extensions))
-	factories.ExtensionModules[zpagesextension.NewFactory().Type()] = "go.opentelemetry.io/collector/extension/zpagesextension v0.147.0"
-	factories.ExtensionModules[ackextension.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/extension/ackextension v0.147.0"
-	factories.ExtensionModules[asapauthextension.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/extension/asapauthextension v0.147.0"
-	factories.ExtensionModules[awsproxy.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/extension/awsproxy v0.147.0"
-	factories.ExtensionModules[azureauthextension.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/extension/azureauthextension v0.147.0"
-	factories.ExtensionModules[basicauthextension.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/extension/basicauthextension v0.147.0"
-	factories.ExtensionModules[bearertokenauthextension.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/extension/bearertokenauthextension v0.147.0"
-	factories.ExtensionModules[cgroupruntimeextension.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/extension/cgroupruntimeextension v0.147.0"
-	factories.ExtensionModules[datadogextension.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/extension/datadogextension v0.147.0"
-	factories.ExtensionModules[awscloudwatchmetricstreamsencodingextension.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/extension/encoding/awscloudwatchmetricstreamsencodingextension v0.147.0"
-	factories.ExtensionModules[awslogsencodingextension.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/extension/encoding/awslogsencodingextension v0.147.0"
-	factories.ExtensionModules[googlecloudlogentryencodingextension.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/extension/encoding/googlecloudlogentryencodingextension v0.147.0"
-	factories.ExtensionModules[jaegerencodingextension.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/extension/encoding/jaegerencodingextension v0.147.0"
-	factories.ExtensionModules[jsonlogencodingextension.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/extension/encoding/jsonlogencodingextension v0.147.0"
-	factories.ExtensionModules[otlpencodingextension.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/extension/encoding/otlpencodingextension v0.147.0"
-	factories.ExtensionModules[skywalkingencodingextension.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/extension/encoding/skywalkingencodingextension v0.147.0"
-	factories.ExtensionModules[textencodingextension.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/extension/encoding/textencodingextension v0.147.0"
-	factories.ExtensionModules[zipkinencodingextension.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/extension/encoding/zipkinencodingextension v0.147.0"
-	factories.ExtensionModules[googleclientauthextension.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/extension/googleclientauthextension v0.147.0"
-	factories.ExtensionModules[headerssetterextension.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/extension/headerssetterextension v0.147.0"
-	factories.ExtensionModules[healthcheckextension.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/extension/healthcheckextension v0.147.0"
-	factories.ExtensionModules[httpforwarderextension.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/extension/httpforwarderextension v0.147.0"
-	factories.ExtensionModules[jaegerremotesampling.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/extension/jaegerremotesampling v0.147.0"
-	factories.ExtensionModules[oauth2clientauthextension.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/extension/oauth2clientauthextension v0.147.0"
-	factories.ExtensionModules[dockerobserver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/extension/observer/dockerobserver v0.147.0"
-	factories.ExtensionModules[ecsobserver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/extension/observer/ecsobserver v0.147.0"
-	factories.ExtensionModules[hostobserver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/extension/observer/hostobserver v0.147.0"
-	factories.ExtensionModules[k8sobserver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/extension/observer/k8sobserver v0.147.0"
-	factories.ExtensionModules[kafkatopicsobserver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/extension/observer/kafkatopicsobserver v0.147.0"
-	factories.ExtensionModules[oidcauthextension.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/extension/oidcauthextension v0.147.0"
-	factories.ExtensionModules[opampextension.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/extension/opampextension v0.147.0"
-	factories.ExtensionModules[pprofextension.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/extension/pprofextension v0.147.0"
-	factories.ExtensionModules[sigv4authextension.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/extension/sigv4authextension v0.147.0"
-	factories.ExtensionModules[filestorage.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/extension/storage/filestorage v0.147.0"
-	factories.ExtensionModules[dbstorage.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/extension/storage/dbstorage v0.147.0"
-	factories.ExtensionModules[redisstorageextension.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/extension/storage/redisstorageextension v0.147.0"
-	factories.ExtensionModules[sumologicextension.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/extension/sumologicextension v0.147.0"
-	factories.ExtensionModules[k8sleaderelector.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/extension/k8sleaderelector v0.147.0"
+	factories.ExtensionModules = makeModulesMap(factories.Extensions, map[component.Type]string{
+		zpagesextension.NewFactory().Type(): "go.opentelemetry.io/collector/extension/zpagesextension v0.155.0",
+		ackextension.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/extension/ackextension v0.155.0",
+		asapauthextension.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/extension/asapauthextension v0.155.0",
+		awsproxy.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/extension/awsproxy v0.155.0",
+		azureauthextension.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/extension/azureauthextension v0.155.0",
+		basicauthextension.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/extension/basicauthextension v0.155.0",
+		bearertokenauthextension.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/extension/bearertokenauthextension v0.155.0",
+		cgroupruntimeextension.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/extension/cgroupruntimeextension v0.155.0",
+		datadogextension.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/extension/datadogextension v0.155.0",
+		awscloudwatchmetricstreamsencodingextension.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/extension/encoding/awscloudwatchmetricstreamsencodingextension v0.155.0",
+		awslogsencodingextension.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/extension/encoding/awslogsencodingextension v0.155.0",
+		googlecloudlogentryencodingextension.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/extension/encoding/googlecloudlogentryencodingextension v0.155.0",
+		jaegerencodingextension.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/extension/encoding/jaegerencodingextension v0.155.0",
+		jsonlogencodingextension.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/extension/encoding/jsonlogencodingextension v0.155.0",
+		otlpencodingextension.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/extension/encoding/otlpencodingextension v0.155.0",
+		skywalkingencodingextension.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/extension/encoding/skywalkingencodingextension v0.155.0",
+		textencodingextension.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/extension/encoding/textencodingextension v0.155.0",
+		zipkinencodingextension.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/extension/encoding/zipkinencodingextension v0.155.0",
+		googleclientauthextension.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/extension/googleclientauthextension v0.155.0",
+		headerssetterextension.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/extension/headerssetterextension v0.155.0",
+		healthcheckextension.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/extension/healthcheckextension v0.155.0",
+		httpforwarderextension.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/extension/httpforwarderextension v0.155.0",
+		jaegerremotesampling.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/extension/jaegerremotesampling v0.155.0",
+		oauth2clientauthextension.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/extension/oauth2clientauthextension v0.155.0",
+		dockerobserver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/extension/observer/dockerobserver v0.155.0",
+		ecsobserver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/extension/observer/ecsobserver v0.155.0",
+		hostobserver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/extension/observer/hostobserver v0.155.0",
+		k8sobserver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/extension/observer/k8sobserver v0.155.0",
+		kafkatopicsobserver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/extension/observer/kafkatopicsobserver v0.155.0",
+		oidcauthextension.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/extension/oidcauthextension v0.155.0",
+		opampextension.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/extension/opampextension v0.155.0",
+		pprofextension.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/extension/pprofextension v0.155.0",
+		sigv4authextension.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/extension/sigv4authextension v0.155.0",
+		filestorage.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/extension/storage/filestorage v0.155.0",
+		dbstorage.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/extension/storage/dbstorage v0.155.0",
+		redisstorageextension.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/extension/storage/redisstorageextension v0.155.0",
+		sumologicextension.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/extension/sumologicextension v0.155.0",
+		k8sleaderelector.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/extension/k8sleaderelector v0.155.0",
+	})
 
 	factories.Receivers, err = otelcol.MakeFactoryMap[receiver.Factory](
 		nodeexporterreceiver.NewFactory(),
@@ -322,66 +338,67 @@ func components() (otelcol.Factories, error) {
 	if err != nil {
 		return otelcol.Factories{}, err
 	}
-	factories.ReceiverModules = make(map[component.Type]string, len(factories.Receivers))
-	factories.ReceiverModules[nodeexporterreceiver.NewFactory().Type()] = "github.com/elek/otel-node-exporter 074a6a79"
-	factories.ReceiverModules[smartctlreceiver.NewFactory().Type()] = "github.com/elek/otel-smartctl-receiver 0368a10"
-	factories.ReceiverModules[nvmereceiver.NewFactory().Type()] = "github.com/elek/otel-nvme-receiver 8cc0a85"
-	factories.ReceiverModules[collector.NewFactory().Type()] = "go.opentelemetry.io/ebpf-profiler v0.0.202610"
-	factories.ReceiverModules[nftreceiver.NewFactory().Type()] = "github.com/elek/otel-nft-receiver 43ccc69"
-	factories.ReceiverModules[nopreceiver.NewFactory().Type()] = "go.opentelemetry.io/collector/receiver/nopreceiver v0.147.0"
-	factories.ReceiverModules[otlpreceiver.NewFactory().Type()] = "go.opentelemetry.io/collector/receiver/otlpreceiver v0.147.0"
-	factories.ReceiverModules[apachereceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/apachereceiver v0.147.0"
-	factories.ReceiverModules[chronyreceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/chronyreceiver v0.147.0"
-	factories.ReceiverModules[dockerstatsreceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/dockerstatsreceiver v0.147.0"
-	factories.ReceiverModules[expvarreceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/expvarreceiver v0.147.0"
-	factories.ReceiverModules[filelogreceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/filelogreceiver v0.147.0"
-	factories.ReceiverModules[filestatsreceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/filestatsreceiver v0.147.0"
-	factories.ReceiverModules[fluentforwardreceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/fluentforwardreceiver v0.147.0"
-	factories.ReceiverModules[githubreceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/githubreceiver v0.147.0"
-	factories.ReceiverModules[gitlabreceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/gitlabreceiver v0.147.0"
-	factories.ReceiverModules[googlecloudmonitoringreceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/googlecloudmonitoringreceiver v0.147.0"
-	factories.ReceiverModules[googlecloudpubsubreceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/googlecloudpubsubreceiver v0.147.0"
-	factories.ReceiverModules[googlecloudspannerreceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/googlecloudspannerreceiver v0.147.0"
-	factories.ReceiverModules[haproxyreceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/haproxyreceiver v0.147.0"
-	factories.ReceiverModules[hostmetricsreceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/hostmetricsreceiver v0.147.0"
-	factories.ReceiverModules[httpcheckreceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/httpcheckreceiver v0.147.0"
-	factories.ReceiverModules[jaegerreceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/jaegerreceiver v0.147.0"
-	factories.ReceiverModules[jmxreceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/jmxreceiver v0.147.0"
-	factories.ReceiverModules[journaldreceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/journaldreceiver v0.147.0"
-	factories.ReceiverModules[k8sclusterreceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver v0.147.0"
-	factories.ReceiverModules[k8seventsreceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8seventsreceiver v0.147.0"
-	factories.ReceiverModules[k8sobjectsreceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sobjectsreceiver v0.147.0"
-	factories.ReceiverModules[kafkametricsreceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kafkametricsreceiver v0.147.0"
-	factories.ReceiverModules[kubeletstatsreceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver v0.147.0"
-	factories.ReceiverModules[lokireceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/lokireceiver v0.147.0"
-	factories.ReceiverModules[memcachedreceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/memcachedreceiver v0.147.0"
-	factories.ReceiverModules[mysqlreceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/mysqlreceiver v0.147.0"
-	factories.ReceiverModules[namedpipereceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/namedpipereceiver v0.147.0"
-	factories.ReceiverModules[nginxreceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/nginxreceiver v0.147.0"
-	factories.ReceiverModules[ntpreceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/ntpreceiver v0.147.0"
-	factories.ReceiverModules[otlpjsonfilereceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/otlpjsonfilereceiver v0.147.0"
-	factories.ReceiverModules[otelarrowreceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/otelarrowreceiver v0.147.0"
-	factories.ReceiverModules[podmanreceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/podmanreceiver v0.147.0"
-	factories.ReceiverModules[postgresqlreceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/postgresqlreceiver v0.147.0"
-	factories.ReceiverModules[prometheusreceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver v0.147.0"
-	factories.ReceiverModules[prometheusremotewritereceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusremotewritereceiver v0.147.0"
-	factories.ReceiverModules[receivercreator.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/receivercreator v0.147.0"
-	factories.ReceiverModules[redisreceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/redisreceiver v0.147.0"
-	factories.ReceiverModules[simpleprometheusreceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/simpleprometheusreceiver v0.147.0"
-	factories.ReceiverModules[sqlqueryreceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/sqlqueryreceiver v0.147.0"
-	factories.ReceiverModules[sqlserverreceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/sqlserverreceiver v0.147.0"
-	factories.ReceiverModules[sshcheckreceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/sshcheckreceiver v0.147.0"
-	factories.ReceiverModules[statsdreceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/statsdreceiver v0.147.0"
-	factories.ReceiverModules[syslogreceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/syslogreceiver v0.147.0"
-	factories.ReceiverModules[tcpcheckreceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/tcpcheckreceiver v0.147.0"
-	factories.ReceiverModules[tcplogreceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/tcplogreceiver v0.147.0"
-	factories.ReceiverModules[tlscheckreceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/tlscheckreceiver v0.147.0"
-	factories.ReceiverModules[udplogreceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/udplogreceiver v0.147.0"
-	factories.ReceiverModules[snmpreceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/snmpreceiver v0.147.0"
-	factories.ReceiverModules[webhookeventreceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/webhookeventreceiver v0.147.0"
-	factories.ReceiverModules[windowseventlogreceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/windowseventlogreceiver v0.147.0"
-	factories.ReceiverModules[windowsperfcountersreceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/windowsperfcountersreceiver v0.147.0"
-	factories.ReceiverModules[zipkinreceiver.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/zipkinreceiver v0.147.0"
+	factories.ReceiverModules = makeModulesMap(factories.Receivers, map[component.Type]string{
+		nodeexporterreceiver.NewFactory().Type(): "github.com/elek/otel-node-exporter 074a6a79",
+		smartctlreceiver.NewFactory().Type(): "github.com/elek/otel-smartctl-receiver 0368a10",
+		nvmereceiver.NewFactory().Type(): "github.com/elek/otel-nvme-receiver 8cc0a85",
+		collector.NewFactory().Type(): "go.opentelemetry.io/ebpf-profiler v0.0.202623",
+		nftreceiver.NewFactory().Type(): "github.com/elek/otel-nft-receiver 43ccc69",
+		nopreceiver.NewFactory().Type(): "go.opentelemetry.io/collector/receiver/nopreceiver v0.155.0",
+		otlpreceiver.NewFactory().Type(): "go.opentelemetry.io/collector/receiver/otlpreceiver v0.155.0",
+		apachereceiver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/apachereceiver v0.155.0",
+		chronyreceiver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/chronyreceiver v0.155.0",
+		dockerstatsreceiver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/dockerstatsreceiver v0.155.0",
+		expvarreceiver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/expvarreceiver v0.155.0",
+		filelogreceiver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/filelogreceiver v0.155.0",
+		filestatsreceiver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/filestatsreceiver v0.155.0",
+		fluentforwardreceiver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/fluentforwardreceiver v0.155.0",
+		githubreceiver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/githubreceiver v0.155.0",
+		gitlabreceiver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/gitlabreceiver v0.155.0",
+		googlecloudmonitoringreceiver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/googlecloudmonitoringreceiver v0.155.0",
+		googlecloudpubsubreceiver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/googlecloudpubsubreceiver v0.155.0",
+		googlecloudspannerreceiver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/googlecloudspannerreceiver v0.155.0",
+		haproxyreceiver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/haproxyreceiver v0.155.0",
+		hostmetricsreceiver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/hostmetricsreceiver v0.155.0",
+		httpcheckreceiver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/httpcheckreceiver v0.155.0",
+		jaegerreceiver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/jaegerreceiver v0.155.0",
+		jmxreceiver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/jmxreceiver v0.155.0",
+		journaldreceiver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/journaldreceiver v0.155.0",
+		k8sclusterreceiver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sclusterreceiver v0.155.0",
+		k8seventsreceiver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8seventsreceiver v0.155.0",
+		k8sobjectsreceiver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/k8sobjectsreceiver v0.155.0",
+		kafkametricsreceiver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kafkametricsreceiver v0.155.0",
+		kubeletstatsreceiver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/kubeletstatsreceiver v0.155.0",
+		lokireceiver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/lokireceiver v0.155.0",
+		memcachedreceiver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/memcachedreceiver v0.155.0",
+		mysqlreceiver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/mysqlreceiver v0.155.0",
+		namedpipereceiver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/namedpipereceiver v0.155.0",
+		nginxreceiver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/nginxreceiver v0.155.0",
+		ntpreceiver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/ntpreceiver v0.155.0",
+		otlpjsonfilereceiver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/otlpjsonfilereceiver v0.155.0",
+		otelarrowreceiver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/otelarrowreceiver v0.155.0",
+		podmanreceiver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/podmanreceiver v0.155.0",
+		postgresqlreceiver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/postgresqlreceiver v0.155.0",
+		prometheusreceiver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver v0.155.0",
+		prometheusremotewritereceiver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusremotewritereceiver v0.155.0",
+		receivercreator.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/receivercreator v0.155.0",
+		redisreceiver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/redisreceiver v0.155.0",
+		simpleprometheusreceiver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/simpleprometheusreceiver v0.155.0",
+		sqlqueryreceiver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/sqlqueryreceiver v0.155.0",
+		sqlserverreceiver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/sqlserverreceiver v0.155.0",
+		sshcheckreceiver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/sshcheckreceiver v0.155.0",
+		statsdreceiver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/statsdreceiver v0.155.0",
+		syslogreceiver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/syslogreceiver v0.155.0",
+		tcpcheckreceiver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/tcpcheckreceiver v0.155.0",
+		tcplogreceiver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/tcplogreceiver v0.155.0",
+		tlscheckreceiver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/tlscheckreceiver v0.155.0",
+		udplogreceiver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/udplogreceiver v0.155.0",
+		snmpreceiver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/snmpreceiver v0.155.0",
+		webhookeventreceiver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/webhookeventreceiver v0.155.0",
+		windowseventlogreceiver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/windowseventlogreceiver v0.155.0",
+		windowsperfcountersreceiver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/windowsperfcountersreceiver v0.155.0",
+		zipkinreceiver.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/receiver/zipkinreceiver v0.155.0",
+	})
 
 	factories.Exporters, err = otelcol.MakeFactoryMap[exporter.Factory](
 		debugexporter.NewFactory(),
@@ -389,6 +406,7 @@ func components() (otelcol.Factories, error) {
 		nopexporter.NewFactory(),
 		otlpexporter.NewFactory(),
 		otlphttpexporter.NewFactory(),
+		clickhouseexporter.NewFactory(),
 		elasticsearchexporter.NewFactory(),
 		fileexporter.NewFactory(),
 		googlecloudexporter.NewFactory(),
@@ -406,25 +424,27 @@ func components() (otelcol.Factories, error) {
 	if err != nil {
 		return otelcol.Factories{}, err
 	}
-	factories.ExporterModules = make(map[component.Type]string, len(factories.Exporters))
-	factories.ExporterModules[debugexporter.NewFactory().Type()] = "go.opentelemetry.io/collector/exporter/debugexporter v0.147.0"
-	factories.ExporterModules[bigqueryexporter.NewFactory().Type()] = "github.com/elek/otel-bigquery-exporter main"
-	factories.ExporterModules[nopexporter.NewFactory().Type()] = "go.opentelemetry.io/collector/exporter/nopexporter v0.147.0"
-	factories.ExporterModules[otlpexporter.NewFactory().Type()] = "go.opentelemetry.io/collector/exporter/otlpexporter v0.147.0"
-	factories.ExporterModules[otlphttpexporter.NewFactory().Type()] = "go.opentelemetry.io/collector/exporter/otlphttpexporter v0.147.0"
-	factories.ExporterModules[elasticsearchexporter.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/exporter/elasticsearchexporter v0.147.0"
-	factories.ExporterModules[fileexporter.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/exporter/fileexporter v0.147.0"
-	factories.ExporterModules[googlecloudexporter.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/exporter/googlecloudexporter v0.147.0"
-	factories.ExporterModules[googlecloudpubsubexporter.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/exporter/googlecloudpubsubexporter v0.147.0"
-	factories.ExporterModules[googlecloudstorageexporter.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/exporter/googlecloudstorageexporter v0.147.0"
-	factories.ExporterModules[googlemanagedprometheusexporter.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/exporter/googlemanagedprometheusexporter v0.147.0"
-	factories.ExporterModules[honeycombmarkerexporter.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/exporter/honeycombmarkerexporter v0.147.0"
-	factories.ExporterModules[loadbalancingexporter.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/exporter/loadbalancingexporter v0.147.0"
-	factories.ExporterModules[otelarrowexporter.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/exporter/otelarrowexporter v0.147.0"
-	factories.ExporterModules[prometheusexporter.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/exporter/prometheusexporter v0.147.0"
-	factories.ExporterModules[prometheusremotewriteexporter.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/exporter/prometheusremotewriteexporter v0.147.0"
-	factories.ExporterModules[syslogexporter.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/exporter/syslogexporter v0.147.0"
-	factories.ExporterModules[zipkinexporter.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/exporter/zipkinexporter v0.147.0"
+	factories.ExporterModules = makeModulesMap(factories.Exporters, map[component.Type]string{
+		debugexporter.NewFactory().Type(): "go.opentelemetry.io/collector/exporter/debugexporter v0.155.0",
+		bigqueryexporter.NewFactory().Type(): "github.com/elek/otel-bigquery-exporter main",
+		nopexporter.NewFactory().Type(): "go.opentelemetry.io/collector/exporter/nopexporter v0.155.0",
+		otlpexporter.NewFactory().Type(): "go.opentelemetry.io/collector/exporter/otlpexporter v0.155.0",
+		otlphttpexporter.NewFactory().Type(): "go.opentelemetry.io/collector/exporter/otlphttpexporter v0.155.0",
+		clickhouseexporter.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/exporter/clickhouseexporter v0.155.0",
+		elasticsearchexporter.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/exporter/elasticsearchexporter v0.155.0",
+		fileexporter.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/exporter/fileexporter v0.155.0",
+		googlecloudexporter.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/exporter/googlecloudexporter v0.155.0",
+		googlecloudpubsubexporter.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/exporter/googlecloudpubsubexporter v0.155.0",
+		googlecloudstorageexporter.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/exporter/googlecloudstorageexporter v0.155.0",
+		googlemanagedprometheusexporter.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/exporter/googlemanagedprometheusexporter v0.155.0",
+		honeycombmarkerexporter.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/exporter/honeycombmarkerexporter v0.155.0",
+		loadbalancingexporter.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/exporter/loadbalancingexporter v0.155.0",
+		otelarrowexporter.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/exporter/otelarrowexporter v0.155.0",
+		prometheusexporter.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/exporter/prometheusexporter v0.155.0",
+		prometheusremotewriteexporter.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/exporter/prometheusremotewriteexporter v0.155.0",
+		syslogexporter.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/exporter/syslogexporter v0.155.0",
+		zipkinexporter.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/exporter/zipkinexporter v0.155.0",
+	})
 
 	factories.Processors, err = otelcol.MakeFactoryMap[processor.Factory](
 		attrcol.NewFactory(),
@@ -459,35 +479,36 @@ func components() (otelcol.Factories, error) {
 	if err != nil {
 		return otelcol.Factories{}, err
 	}
-	factories.ProcessorModules = make(map[component.Type]string, len(factories.Processors))
-	factories.ProcessorModules[attrcol.NewFactory().Type()] = "github.com/elek/otel-attrcol-processor main"
-	factories.ProcessorModules[batchprocessor.NewFactory().Type()] = "go.opentelemetry.io/collector/processor/batchprocessor v0.147.0"
-	factories.ProcessorModules[memorylimiterprocessor.NewFactory().Type()] = "go.opentelemetry.io/collector/processor/memorylimiterprocessor v0.147.0"
-	factories.ProcessorModules[attributesprocessor.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/processor/attributesprocessor v0.147.0"
-	factories.ProcessorModules[cumulativetodeltaprocessor.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/processor/cumulativetodeltaprocessor v0.147.0"
-	factories.ProcessorModules[deltatocumulativeprocessor.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/processor/deltatocumulativeprocessor v0.147.0"
-	factories.ProcessorModules[deltatorateprocessor.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/processor/deltatorateprocessor v0.147.0"
-	factories.ProcessorModules[filterprocessor.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/processor/filterprocessor v0.147.0"
-	factories.ProcessorModules[geoipprocessor.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/processor/geoipprocessor v0.147.0"
-	factories.ProcessorModules[groupbyattrsprocessor.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/processor/groupbyattrsprocessor v0.147.0"
-	factories.ProcessorModules[groupbytraceprocessor.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/processor/groupbytraceprocessor v0.147.0"
-	factories.ProcessorModules[intervalprocessor.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/processor/intervalprocessor v0.147.0"
-	factories.ProcessorModules[isolationforestprocessor.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/processor/isolationforestprocessor v0.147.0"
-	factories.ProcessorModules[k8sattributesprocessor.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/processor/k8sattributesprocessor v0.147.0"
-	factories.ProcessorModules[logdedupprocessor.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/processor/logdedupprocessor v0.147.0"
-	factories.ProcessorModules[metricsgenerationprocessor.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/processor/metricsgenerationprocessor v0.147.0"
-	factories.ProcessorModules[metricstarttimeprocessor.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/processor/metricstarttimeprocessor v0.147.0"
-	factories.ProcessorModules[metricstransformprocessor.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/processor/metricstransformprocessor v0.147.0"
-	factories.ProcessorModules[probabilisticsamplerprocessor.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/processor/probabilisticsamplerprocessor v0.147.0"
-	factories.ProcessorModules[redactionprocessor.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/processor/redactionprocessor v0.147.0"
-	factories.ProcessorModules[remotetapprocessor.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/processor/remotetapprocessor v0.147.0"
-	factories.ProcessorModules[resourcedetectionprocessor.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/processor/resourcedetectionprocessor v0.147.0"
-	factories.ProcessorModules[resourceprocessor.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/processor/resourceprocessor v0.147.0"
-	factories.ProcessorModules[schemaprocessor.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/processor/schemaprocessor v0.147.0"
-	factories.ProcessorModules[spanprocessor.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/processor/spanprocessor v0.147.0"
-	factories.ProcessorModules[tailsamplingprocessor.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/processor/tailsamplingprocessor v0.147.0"
-	factories.ProcessorModules[transformprocessor.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/processor/transformprocessor v0.147.0"
-	factories.ProcessorModules[unrollprocessor.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/processor/unrollprocessor v0.147.0"
+	factories.ProcessorModules = makeModulesMap(factories.Processors, map[component.Type]string{
+		attrcol.NewFactory().Type(): "github.com/elek/otel-attrcol-processor main",
+		batchprocessor.NewFactory().Type(): "go.opentelemetry.io/collector/processor/batchprocessor v0.155.0",
+		memorylimiterprocessor.NewFactory().Type(): "go.opentelemetry.io/collector/processor/memorylimiterprocessor v0.155.0",
+		attributesprocessor.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/processor/attributesprocessor v0.155.0",
+		cumulativetodeltaprocessor.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/processor/cumulativetodeltaprocessor v0.155.0",
+		deltatocumulativeprocessor.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/processor/deltatocumulativeprocessor v0.155.0",
+		deltatorateprocessor.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/processor/deltatorateprocessor v0.155.0",
+		filterprocessor.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/processor/filterprocessor v0.155.0",
+		geoipprocessor.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/processor/geoipprocessor v0.155.0",
+		groupbyattrsprocessor.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/processor/groupbyattrsprocessor v0.155.0",
+		groupbytraceprocessor.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/processor/groupbytraceprocessor v0.155.0",
+		intervalprocessor.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/processor/intervalprocessor v0.155.0",
+		isolationforestprocessor.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/processor/isolationforestprocessor v0.155.0",
+		k8sattributesprocessor.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/processor/k8sattributesprocessor v0.155.0",
+		logdedupprocessor.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/processor/logdedupprocessor v0.155.0",
+		metricsgenerationprocessor.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/processor/metricsgenerationprocessor v0.155.0",
+		metricstarttimeprocessor.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/processor/metricstarttimeprocessor v0.155.0",
+		metricstransformprocessor.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/processor/metricstransformprocessor v0.155.0",
+		probabilisticsamplerprocessor.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/processor/probabilisticsamplerprocessor v0.155.0",
+		redactionprocessor.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/processor/redactionprocessor v0.155.0",
+		remotetapprocessor.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/processor/remotetapprocessor v0.155.0",
+		resourcedetectionprocessor.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/processor/resourcedetectionprocessor v0.155.0",
+		resourceprocessor.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/processor/resourceprocessor v0.155.0",
+		schemaprocessor.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/processor/schemaprocessor v0.155.0",
+		spanprocessor.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/processor/spanprocessor v0.155.0",
+		tailsamplingprocessor.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/processor/tailsamplingprocessor v0.155.0",
+		transformprocessor.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/processor/transformprocessor v0.155.0",
+		unrollprocessor.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/processor/unrollprocessor v0.155.0",
+	})
 
 	factories.Connectors, err = otelcol.MakeFactoryMap[connector.Factory](
 		forwardconnector.NewFactory(),
@@ -507,20 +528,21 @@ func components() (otelcol.Factories, error) {
 	if err != nil {
 		return otelcol.Factories{}, err
 	}
-	factories.ConnectorModules = make(map[component.Type]string, len(factories.Connectors))
-	factories.ConnectorModules[forwardconnector.NewFactory().Type()] = "go.opentelemetry.io/collector/connector/forwardconnector v0.147.0"
-	factories.ConnectorModules[countconnector.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/connector/countconnector v0.147.0"
-	factories.ConnectorModules[datadogconnector.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/connector/datadogconnector v0.147.0"
-	factories.ConnectorModules[exceptionsconnector.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/connector/exceptionsconnector v0.147.0"
-	factories.ConnectorModules[failoverconnector.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/connector/failoverconnector v0.147.0"
-	factories.ConnectorModules[grafanacloudconnector.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/connector/grafanacloudconnector v0.147.0"
-	factories.ConnectorModules[otlpjsonconnector.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/connector/otlpjsonconnector v0.147.0"
-	factories.ConnectorModules[roundrobinconnector.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/connector/roundrobinconnector v0.147.0"
-	factories.ConnectorModules[routingconnector.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/connector/routingconnector v0.147.0"
-	factories.ConnectorModules[servicegraphconnector.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/connector/servicegraphconnector v0.147.0"
-	factories.ConnectorModules[spanmetricsconnector.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/connector/spanmetricsconnector v0.147.0"
-	factories.ConnectorModules[sumconnector.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/connector/sumconnector v0.147.0"
-	factories.ConnectorModules[signaltometricsconnector.NewFactory().Type()] = "github.com/open-telemetry/opentelemetry-collector-contrib/connector/signaltometricsconnector v0.147.0"
+	factories.ConnectorModules = makeModulesMap(factories.Connectors, map[component.Type]string{
+		forwardconnector.NewFactory().Type(): "go.opentelemetry.io/collector/connector/forwardconnector v0.155.0",
+		countconnector.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/connector/countconnector v0.155.0",
+		datadogconnector.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/connector/datadogconnector v0.155.0",
+		exceptionsconnector.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/connector/exceptionsconnector v0.155.0",
+		failoverconnector.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/connector/failoverconnector v0.155.0",
+		grafanacloudconnector.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/connector/grafanacloudconnector v0.155.0",
+		otlpjsonconnector.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/connector/otlpjsonconnector v0.155.0",
+		roundrobinconnector.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/connector/roundrobinconnector v0.155.0",
+		routingconnector.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/connector/routingconnector v0.155.0",
+		servicegraphconnector.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/connector/servicegraphconnector v0.155.0",
+		spanmetricsconnector.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/connector/spanmetricsconnector v0.155.0",
+		sumconnector.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/connector/sumconnector v0.155.0",
+		signaltometricsconnector.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/connector/signaltometricsconnector v0.155.0",
+	})
 
 	return factories, nil
 }

@@ -83,7 +83,7 @@ exporters:
 
 ## Contrib Components
 
-Based on OpenTelemetry Collector **v0.145.0** / Collector Contrib **v0.145.0**.
+Based on OpenTelemetry Collector **v0.155.0** / Collector Contrib **v0.155.0**.
 
 <details>
 <summary><strong>Receivers (54)</strong></summary>
@@ -93,9 +93,9 @@ apache, chrony, dockerstats, expvar, filelog, filestats, fluentforward, github, 
 </details>
 
 <details>
-<summary><strong>Exporters (14)</strong></summary>
+<summary><strong>Exporters (15)</strong></summary>
 
-elasticsearch, file, googlecloud, googlecloudpubsub, googlecloudstorage, googlemanagedprometheus, honeycombmarker, loadbalancing, otelarrow, prometheus, prometheusremotewrite, syslog, zipkin
+clickhouse, elasticsearch, file, googlecloud, googlecloudpubsub, googlecloudstorage, googlemanagedprometheus, honeycombmarker, loadbalancing, otelarrow, prometheus, prometheusremotewrite, syslog, zipkin
 
 </details>
 
@@ -128,7 +128,7 @@ env, file, http, https, yaml, aes, s3, secretsmanager, googlesecretmanager
 
 ### Prerequisites
 
-- Go 1.25.3+
+- Go 1.26.1+
 - [OpenTelemetry Collector Builder](https://github.com/open-telemetry/opentelemetry-collector/tree/main/cmd/builder) (`builder`)
 
 ### Generate and Compile
