@@ -1,3 +1,4 @@
+version: 2
 project_name: otelcol
 
 builds:
@@ -11,13 +12,13 @@ builds:
       - amd64
 
 archives:
-  - format: tar.gz
+  - formats: [tar.gz]
     format_overrides:
       - goos: windows
-        format: zip
+        formats: [zip]
 
 snapshot:
-  name_template: "{{ incpatch .Version }}-next"
+  version_template: "{{ incpatch .Version }}-next"
 
 changelog:
   sort: asc
