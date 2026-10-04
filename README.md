@@ -109,7 +109,7 @@ attributes, cumulativetodelta, deltatocumulative, deltatorate, filter, geoip, gr
 <details>
 <summary><strong>Extensions (38)</strong></summary>
 
-ack, asapauth, awsproxy, azureauth, basicauth, bearertokenauth, cgroupruntime, datadog, encoding (awscloudwatchmetricstreams, awslogs, googlecloudlogentry, jaeger, jsonlog, otlp, skywalking, text, zipkin), googleclientauth, headersetter, healthcheck, httpforwarder, jaegerremotesampling, oauth2clientauth, observer (docker, ecs, host, k8s, kafkatopics), oidcauth, opamp, pprof, sigv4auth, storage (file, db, redis), sumologic, k8sleaderelector
+ack, asapauth, awsproxy, azureauth, basicauth, bearertokenauth, cgroupruntime, datadog, encoding (awscloudwatchmetricstreams, awslogs, googlecloudlogentry, jaeger, jsonlog, otlp, skywalking, text, zipkin), googleclientauth, headersetter, healthcheck, httpforwarder, jaegerremotesampling, oauth2clientauth, observer (docker, ecs, host, k8s), oidcauth, opamp, pprof, sigv4auth, storage (file, db, redis), sumologic, k8sleaderelector
 
 </details>
 
