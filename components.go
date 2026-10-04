@@ -45,7 +45,6 @@ import (
 	zipkinexporter "github.com/open-telemetry/opentelemetry-collector-contrib/exporter/zipkinexporter"
 	zpagesextension "go.opentelemetry.io/collector/extension/zpagesextension"
 	ackextension "github.com/open-telemetry/opentelemetry-collector-contrib/extension/ackextension"
-	asapauthextension "github.com/open-telemetry/opentelemetry-collector-contrib/extension/asapauthextension"
 	awsproxy "github.com/open-telemetry/opentelemetry-collector-contrib/extension/awsproxy"
 	azureauthextension "github.com/open-telemetry/opentelemetry-collector-contrib/extension/azureauthextension"
 	basicauthextension "github.com/open-telemetry/opentelemetry-collector-contrib/extension/basicauthextension"
@@ -192,7 +191,6 @@ func components() (otelcol.Factories, error) {
 	factories.Extensions, err = otelcol.MakeFactoryMap[extension.Factory](
 		zpagesextension.NewFactory(),
 		ackextension.NewFactory(),
-		asapauthextension.NewFactory(),
 		awsproxy.NewFactory(),
 		azureauthextension.NewFactory(),
 		basicauthextension.NewFactory(),
@@ -234,7 +232,6 @@ func components() (otelcol.Factories, error) {
 	factories.ExtensionModules = makeModulesMap(factories.Extensions, map[component.Type]string{
 		zpagesextension.NewFactory().Type(): "go.opentelemetry.io/collector/extension/zpagesextension v0.162.0",
 		ackextension.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/extension/ackextension v0.162.0",
-		asapauthextension.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/extension/asapauthextension v0.162.0",
 		awsproxy.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/extension/awsproxy v0.162.0",
 		azureauthextension.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/extension/azureauthextension v0.162.0",
 		basicauthextension.NewFactory().Type(): "github.com/open-telemetry/opentelemetry-collector-contrib/extension/basicauthextension v0.162.0",

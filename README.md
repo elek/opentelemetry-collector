@@ -1,6 +1,6 @@
 # otelcol - Custom OpenTelemetry Collector Distribution
 
-A custom [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/) distribution built with the [OpenTelemetry Collector Builder](https://github.com/open-telemetry/opentelemetry-collector/tree/main/cmd/builder). Bundles 170+ components from the core collector, the contrib repository, and several custom components for infrastructure and hardware monitoring.
+A custom [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/) distribution built with the [OpenTelemetry Collector Builder](https://github.com/open-telemetry/opentelemetry-collector/tree/main/cmd/builder). Bundles components from the core collector, the contrib repository, and several custom components for infrastructure and hardware monitoring.
 
 ## Custom Components
 
@@ -83,38 +83,38 @@ exporters:
 
 ## Contrib Components
 
-Based on OpenTelemetry Collector **v0.155.0** / Collector Contrib **v0.155.0**.
+See `manifest.yaml` for the exact component versions.
 
 <details>
-<summary><strong>Receivers (54)</strong></summary>
+<summary><strong>Receivers</strong></summary>
 
 apache, chrony, dockerstats, expvar, filelog, filestats, fluentforward, github, gitlab, googlecloudmonitoring, googlecloudpubsub, googlecloudspanner, haproxy, hostmetrics, httpcheck, jaeger, jmx, journald, k8scluster, k8sevents, k8sobjects, kafkametrics, kubeletstats, loki, memcached, mysql, namedpipe, nginx, ntp, otlpjsonfile, otelarrow, podman, postgresql, prometheus, prometheusremotewrite, receivercreator, redis, simpleprometheus, snmp, sqlquery, sqlserver, sshcheck, statsd, syslog, tcpcheck, tcplog, tlscheck, udplog, webhookevent, windowseventlog, windowsperfcounters, zipkin
 
 </details>
 
 <details>
-<summary><strong>Exporters (15)</strong></summary>
+<summary><strong>Exporters</strong></summary>
 
 clickhouse, elasticsearch, file, googlecloud, googlecloudpubsub, googlecloudstorage, googlemanagedprometheus, honeycombmarker, loadbalancing, otelarrow, prometheus, prometheusremotewrite, syslog, zipkin
 
 </details>
 
 <details>
-<summary><strong>Processors (26)</strong></summary>
+<summary><strong>Processors</strong></summary>
 
 attributes, cumulativetodelta, deltatocumulative, deltatorate, filter, geoip, groupbyattrs, groupbytrace, interval, isolationforest, k8sattributes, logdedup, metricsgeneration, metricsstarttime, metricstransform, probabilisticsampler, redaction, remotetap, resourcedetection, resource, schema, span, tailsampling, transform, unroll
 
 </details>
 
 <details>
-<summary><strong>Extensions (38)</strong></summary>
+<summary><strong>Extensions</strong></summary>
 
-ack, asapauth, awsproxy, azureauth, basicauth, bearertokenauth, cgroupruntime, datadog, encoding (awscloudwatchmetricstreams, awslogs, googlecloudlogentry, jaeger, jsonlog, otlp, skywalking, text, zipkin), googleclientauth, headersetter, healthcheck, httpforwarder, jaegerremotesampling, oauth2clientauth, observer (docker, ecs, host, k8s), oidcauth, opamp, pprof, sigv4auth, storage (file, db, redis), sumologic, k8sleaderelector
+ack, awsproxy, azureauth, basicauth, bearertokenauth, cgroupruntime, datadog, encoding (awscloudwatchmetricstreams, awslogs, googlecloudlogentry, jaeger, jsonlog, otlp, skywalking, text, zipkin), googleclientauth, headersetter, healthcheck, httpforwarder, jaegerremotesampling, oauth2clientauth, observer (docker, ecs, host, k8s), oidcauth, opamp, pprof, sigv4auth, storage (file, db, redis), sumologic, k8sleaderelector
 
 </details>
 
 <details>
-<summary><strong>Connectors (13)</strong></summary>
+<summary><strong>Connectors</strong></summary>
 
 count, datadog, exceptions, failover, grafanacloud, otlpjson, roundrobin, routing, servicegraph, spanmetrics, sum, signaltometrics
 
@@ -128,7 +128,7 @@ env, file, http, https, yaml, aes, s3, secretsmanager, googlesecretmanager
 
 ### Prerequisites
 
-- Go 1.26.1+
+- Go (see `go.mod` for the required version)
 - [OpenTelemetry Collector Builder](https://github.com/open-telemetry/opentelemetry-collector/tree/main/cmd/builder) (`builder`)
 
 ### Generate and Compile

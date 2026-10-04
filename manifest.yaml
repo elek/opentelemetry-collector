@@ -9,7 +9,6 @@ dist:
 extensions:
   - gomod: go.opentelemetry.io/collector/extension/zpagesextension v0.162.0
   - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/extension/ackextension v0.162.0
-  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/extension/asapauthextension v0.162.0
   - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/extension/awsproxy v0.162.0
   - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/extension/azureauthextension v0.162.0
   - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/extension/basicauthextension v0.162.0

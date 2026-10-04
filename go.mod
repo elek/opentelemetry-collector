@@ -43,7 +43,6 @@ require (
 	github.com/open-telemetry/opentelemetry-collector-contrib/exporter/syslogexporter v0.162.0
 	github.com/open-telemetry/opentelemetry-collector-contrib/exporter/zipkinexporter v0.162.0
 	github.com/open-telemetry/opentelemetry-collector-contrib/extension/ackextension v0.162.0
-	github.com/open-telemetry/opentelemetry-collector-contrib/extension/asapauthextension v0.162.0
 	github.com/open-telemetry/opentelemetry-collector-contrib/extension/awsproxy v0.162.0
 	github.com/open-telemetry/opentelemetry-collector-contrib/extension/azureauthextension v0.162.0
 	github.com/open-telemetry/opentelemetry-collector-contrib/extension/basicauthextension v0.162.0
@@ -183,7 +182,6 @@ require (
 )
 
 require (
-	bitbucket.org/atlassian/go-asap/v2 v2.26.3 // indirect
 	cel.dev/expr v0.25.3 // indirect
 	cloud.google.com/go v0.123.0 // indirect
 	cloud.google.com/go/auth v0.23.2 // indirect
@@ -316,7 +314,6 @@ require (
 	github.com/Masterminds/semver/v3 v3.5.0 // indirect
 	github.com/Microsoft/go-winio v0.6.2 // indirect
 	github.com/SAP/go-hdb v1.18.9 // indirect
-	github.com/SermoDigital/jose v0.9.2-0.20180104203859-803625baeddc // indirect
 	github.com/Showmax/go-fqdn v1.0.0 // indirect
 	github.com/alecthomas/participle/v2 v2.1.4 // indirect
 	github.com/alecthomas/units v0.0.0-20240927000941-0f3dac36c52b // indirect
@@ -383,7 +380,6 @@ require (
 	github.com/dennwc/btrfs v0.0.0-20241002142654-12ae127e0bf6 // indirect
 	github.com/dennwc/ioctl v1.0.0 // indirect
 	github.com/dennwc/varint v1.0.0 // indirect
-	github.com/dgraph-io/ristretto/v2 v2.4.0 // indirect
 	github.com/dgryski/go-metro v0.0.0-20250106013310-edb8663e5e33 // indirect
 	github.com/digitalocean/go-metadata v0.0.0-20250129100319-e3650a3df44b // indirect
 	github.com/digitalocean/godo v1.201.0 // indirect
@@ -656,7 +652,6 @@ require (
 	github.com/planetscale/vtprotobuf v0.6.1-0.20240319094008-0393e58bdf10 // indirect
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	github.com/power-devops/perfstat v0.0.0-20260805114148-88456608a4f6 // indirect
-	github.com/pquerna/cachecontrol v0.1.0 // indirect
 	github.com/prometheus-community/go-runit v0.1.0 // indirect
 	github.com/prometheus/alertmanager v0.33.1 // indirect
 	github.com/prometheus/client_golang v1.24.1 // indirect
@@ -717,7 +712,6 @@ require (
 	github.com/ua-parser/uap-go v0.0.0-20251207011819-db9adb27a0b8 // indirect
 	github.com/valyala/fastjson v1.6.10 // indirect
 	github.com/vektah/gqlparser/v2 v2.5.22 // indirect
-	github.com/vincent-petithory/dataurl v1.0.0 // indirect
 	github.com/vultr/govultr/v3 v3.32.0 // indirect
 	github.com/x448/float16 v0.8.4 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20240726163527-a2c0da244d78 // indirect
