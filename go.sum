@@ -599,8 +599,8 @@ github.com/elek/otel-nvme-receiver v0.0.0-20260429182428-8cc0a8577c1f h1:Aqgs2G1
 github.com/elek/otel-nvme-receiver v0.0.0-20260429182428-8cc0a8577c1f/go.mod h1:oAQW5NIzvdvnl38w06dW8WmNW1J9Plyvyf+FVqunsvI=
 github.com/elek/otel-smartctl-receiver v0.0.0-20251209143324-0368a10167a5 h1:Y4xRDtKEaeqUEiwfkuxKpT3I5e0DetCmx0R1/8geYjw=
 github.com/elek/otel-smartctl-receiver v0.0.0-20251209143324-0368a10167a5/go.mod h1:hl6W88ufgZ5tUsoVuvLrRD/VONSj02AoIkxgKf3UqkU=
-github.com/elek/otel-storjstats-receiver v0.0.0-20260814141402-e78a98ff651f h1:2VkLD7bRtJgeJrwSTq1vItV0PGY0K7YgXEkYOg4FujA=
-github.com/elek/otel-storjstats-receiver v0.0.0-20260814141402-e78a98ff651f/go.mod h1:jajNMFmSx5ezb6KV21CHpLnw+V8lXyezIBF84ARwGOc=
+github.com/elek/otel-storjstats-receiver v0.0.0-20261004100144-dba5cd841702 h1:brcyYujzbXn2HLxP/mbT1v/6B/l+YmIOAZ8an/1RYuI=
+github.com/elek/otel-storjstats-receiver v0.0.0-20261004100144-dba5cd841702/go.mod h1:KKpdnS2404/6pDqJx9WsFTpg5bhU8whdS02uc33AHRk=
 github.com/ema/qdisc v1.0.0 h1:EHLG08FVRbWLg8uRICa3xzC9Zm0m7HyMHfXobWFnXYg=
 github.com/ema/qdisc v1.0.0/go.mod h1:FhIc0fLYi7f+lK5maMsesDqwYojIOh3VfRs8EVd5YJQ=
 github.com/emicklei/go-restful/v3 v3.13.0 h1:C4Bl2xDndpU6nJ4bc1jXd+uTmYPVUwkD6bFY/oTyCes=

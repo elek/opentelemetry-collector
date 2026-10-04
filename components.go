@@ -339,7 +339,7 @@ func components() (otelcol.Factories, error) {
 		return otelcol.Factories{}, err
 	}
 	factories.ReceiverModules = makeModulesMap(factories.Receivers, map[component.Type]string{
-		statsreceiver.NewFactory().Type(): "github.com/elek/otel-storjstats-receiver e78a98f",
+		statsreceiver.NewFactory().Type(): "github.com/elek/otel-storjstats-receiver dba5cd8",
 		nodeexporterreceiver.NewFactory().Type(): "github.com/elek/otel-node-exporter 8c04cb05",
 		smartctlreceiver.NewFactory().Type(): "github.com/elek/otel-smartctl-receiver 0368a10",
 		nvmereceiver.NewFactory().Type(): "github.com/elek/otel-nvme-receiver 8cc0a85",

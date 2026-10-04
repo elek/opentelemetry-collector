@@ -100,7 +100,7 @@ processors:
   - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/unrollprocessor v0.158.0
 
 receivers:
-  - gomod: github.com/elek/otel-storjstats-receiver e78a98f
+  - gomod: github.com/elek/otel-storjstats-receiver dba5cd8
     name: statsreceiver
   - gomod: github.com/elek/otel-node-exporter 8c04cb05
     name: nodeexporterreceiver

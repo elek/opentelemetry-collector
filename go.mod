@@ -11,7 +11,7 @@ require (
 	github.com/elek/otel-node-exporter v0.0.0-20260814204548-8c04cb050758
 	github.com/elek/otel-nvme-receiver v0.0.0-20260429182428-8cc0a8577c1f
 	github.com/elek/otel-smartctl-receiver v0.0.0-20251209143324-0368a10167a5
-	github.com/elek/otel-storjstats-receiver v0.0.0-20260814141402-e78a98ff651f
+	github.com/elek/otel-storjstats-receiver v0.0.0-20261004100144-dba5cd841702
 	github.com/open-telemetry/opentelemetry-collector-contrib/confmap/provider/aesprovider v0.158.0
 	github.com/open-telemetry/opentelemetry-collector-contrib/confmap/provider/googlesecretmanagerprovider v0.158.0
 	github.com/open-telemetry/opentelemetry-collector-contrib/confmap/provider/s3provider v0.158.0
